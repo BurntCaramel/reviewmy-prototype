@@ -193,7 +193,7 @@ function* ProfileCard({ profile }) {
   yield `</div>`;
 }
 
-function* ProfileSectionTabs({ currentPage }) {
+function* ProfileSectionTabs({ profile, currentPage }) {
   // yield `<div style="background: ${shade};">`;
   yield `<div style="background: linear-gradient(180deg, ${shadeOf(0.7)} 0%, ${shadeOf(1)} 100%);">`;
 
@@ -206,15 +206,15 @@ function* ProfileSectionTabs({ currentPage }) {
   const mapStyle = currentPage === 'map' ? activeStyle : inactiveStyle;
   const contactStyle = currentPage === 'contact' ? activeStyle : inactiveStyle;
 
-  yield `<a href="/api/p/1" data-p=1/2 style="${reviewsStyle}">`;
+  yield `<a href="/api/p/${profile.id}" data-p=1/2 style="${reviewsStyle}">`;
   yield text`3 Reviews`;
   yield `</a>`;
 
-  yield `<a href="/api/p/1/map" data-p=1/2 style="${mapStyle}">`;
+  yield `<a href="/api/p/${profile.id}/map" data-p=1/2 style="${mapStyle}">`;
   yield text`Map`;
   yield `</a>`;
 
-  yield `<a href="/api/p/1/contact" data-p=1/2 style="${contactStyle}">`;
+  yield `<a href="/api/p/${profile.id}/contact" data-p=1/2 style="${contactStyle}">`;
   yield text`Contact`;
   yield `</a>`;
 
@@ -334,7 +334,7 @@ function* ContactSection() {
 }
 
 function ProfilePage({ profile }) {
-  const themePrimary = "#44A36A";
+  const themePrimary = profile.themePrimaryColor;
 
   return [
     ...ProfileStyles(),
@@ -342,13 +342,13 @@ function ProfilePage({ profile }) {
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard({ profile }),
-    ...ProfileSectionTabs({ currentPage: 'reviews' }),
+    ...ProfileSectionTabs({ profile, currentPage: 'reviews' }),
     ...ReviewsList()
   ];
 }
 
 function ProfileMapPage({ profile }) {
-  const themePrimary = "#44A36A";
+  const themePrimary = profile.themePrimaryColor;
 
   return [
     ...ProfileStyles(),
@@ -356,13 +356,13 @@ function ProfileMapPage({ profile }) {
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard({ profile }),
-    ...ProfileSectionTabs({ currentPage: 'map' }),
+    ...ProfileSectionTabs({ profile, currentPage: 'map' }),
     ...ReviewsMap()
   ];
 }
 
 function ProfileContactPage({ profile }) {
-  const themePrimary = "#44A36A";
+  const themePrimary = profile.themePrimaryColor;
 
   return [
     ...ProfileStyles(),
@@ -370,7 +370,7 @@ function ProfileContactPage({ profile }) {
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard({ profile }),
-    ...ProfileSectionTabs({ currentPage: 'contact' }),
+    ...ProfileSectionTabs({ profile, currentPage: 'contact' }),
     ...ContactSection()
   ];
 }

@@ -1,6 +1,7 @@
 const profiles = new Map();
 
 profiles.set("1", {
+  id: "1",
   name: "Peter Cundall",
   avatarImageURL: "https://randomuser.me/api/portraits/men/29.jpg",
   bio:
@@ -9,6 +10,7 @@ profiles.set("1", {
 });
 
 profiles.set("2", {
+  id: "2",
   name: "Adam Liaw",
   avatarImageURL: "https://randomuser.me/api/portraits/men/40.jpg",
   bio: "I love cooking, and will cook for you for special events in your home.",
@@ -16,6 +18,7 @@ profiles.set("2", {
 });
 
 profiles.set("3", {
+  id: "3",
   name: "Marie Kondo",
   avatarImageURL: "https://randomuser.me/api/portraits/women/60.jpg",
   bio:
