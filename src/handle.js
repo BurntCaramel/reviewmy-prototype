@@ -1,5 +1,5 @@
-const { htmlWriter, ProfilePage, ProfileMapPage, ProfileContactPage } = require("./view");
-const { profiles } = require("./data");
+const { htmlWriter, ProfilePage, ProfileMapPage, ProfileContactPage, ProfileReviewPage } = require("./view");
+const { profiles, reviewsByProfileID } = require("./data");
 
 /**
  * 
@@ -19,22 +19,31 @@ function handleRequest(req, res) {
     return;
   }
 
-  const [,id] = path.match(/\/p\/([\d]+)/);
-  const profile = profiles.get(id);
+  const [,profileID] = path.match(/\/p\/([\d]+)/) ?? [];
+  const [,reviewID] = path.match(/\/reviews\/([\d]+)/) ?? [];
+  const profile = profiles.get(profileID);
+  const reviews = reviewsByProfileID.get(profileID);
 
-  if (profile === undefined) {
+  const reviewNotFound = typeof reviewID === 'string' && (reviews === undefined || !reviews.has(reviewID));
+
+  if (profile === undefined || reviewNotFound) {
     render(["<h1>Not found</h1>"]);
     return;
   }
 
-  const dynamicPath = path.replace(/\/p\/[\d]+/, "/p/:id");
+  let dynamicPath = path;
+  dynamicPath = dynamicPath.replace(/\/p\/[\d]+/, "/p/:profileID");
+  dynamicPath = dynamicPath.replace(/\/reviews\/[\d]+/, "/reviews/:reviewsID");
 
-  if (dynamicPath === "/api/p/:id") {
-    render(ProfilePage({ profile }));
-  } else if (dynamicPath === "/api/p/:id/map") {
-    render(ProfileMapPage({ profile }));
-  } else if (dynamicPath === "/api/p/:id/contact") {
-    render(ProfileContactPage({ profile }));
+  if (dynamicPath === "/api/p/:profileID") {
+    render(ProfilePage({ profile, reviews }));
+  } else if (dynamicPath === "/api/p/:profileID/map") {
+    render(ProfileMapPage({ profile, reviews }));
+  } else if (dynamicPath === "/api/p/:profileID/contact") {
+    render(ProfileContactPage({ profile, reviews }));
+  } else if (dynamicPath === "/api/p/:profileID/reviews/:reviewsID") {
+    const review = reviews.get(reviewID);
+    render(ProfileReviewPage({ profile, review }));
   } else {
     res.end("Hello World!" + JSON.stringify(path));
   }

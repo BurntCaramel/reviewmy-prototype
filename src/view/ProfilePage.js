@@ -180,17 +180,29 @@ function* ProfileCard({ profile }) {
   yield `<div class="Y">`;
   yield `<h1 data-text=0>`;
   // yield "Peter Cundall";
-  yield profile.name;
+  yield text(profile.name);
   yield "</h1>";
   yield `<hr data-y=1/2>`;
   yield `<p data-text="-1 italic">`;
-  yield profile.bio;
+  yield text(profile.bio);
   // yield "Gardening is my passion, especially trees and native shrubbery. Available for hire.";
   yield `</div>`;
 
   yield `</div>`;
 
   yield `</div>`;
+}
+
+function* SeeOtherReviewsSection({ profile }) {
+  yield `<aside data-measure=center data-p=1>`;
+
+  yield `<a href="/api/p/${profile.id}">`;
+  yield text`See other reviews for `;
+  yield text(profile.name);
+  yield text`.`;
+  yield `</a>`;
+
+  yield `</aside>`;
 }
 
 function* ProfileSectionTabs({ profile, currentPage }) {
@@ -236,7 +248,7 @@ function* ReviewArticle({
   yield `<article data-measure=center data-p="1">`;
 
   yield `<header class="X" data-links="current-color underline-on-hover">`;
-  yield `<a href="/p/${profileID}/reviews/${reviewID}">`;
+  yield `<a href="/api/p/${profileID}/reviews/${reviewID}">`;
   yield text(timeDisplay);
   yield `</a>`;
   yield `<hr>`;
@@ -259,39 +271,10 @@ function* ReviewArticle({
   yield `</article>`;
 }
 
-function* ReviewsList() {
-  yield* ReviewArticle({
-    profileID: 1,
-    reviewID: 3,
-    timeDisplay: "2 days ago",
-    authorDisplay: "Jane Austin",
-    content:
-      "Peter transformed my garden into something my whole family uses every day. We love lockdowns as we get to stay in our garden.",
-    rating: 5,
-    heroImageURL: "https://images.unsplash.com/photo-1550948390-6eb7fa773072?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fGdhcmRlbnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
-  });
-
-  yield* ReviewArticle({
-    profileID: 1,
-    reviewID: 2,
-    timeDisplay: "3 weeks ago",
-    authorDisplay: "Banjo Patterson",
-    content:
-      "We now have birds visit our backyard all the time since Peter introduced the trees they would like. It’s changed the feeling of our entire home!",
-    rating: 4,
-    heroImageURL: "https://images.unsplash.com/photo-1615428116353-9d6a4bbf13d2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8YmlyZCUyMGJhdGh8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
-  });
-
-  yield* ReviewArticle({
-    profileID: 1,
-    reviewID: 1,
-    timeDisplay: "7 weeks ago",
-    authorDisplay: "Bob Hawke",
-    content:
-      "Peter knows Australia’s flora like the back of his hand, I would recommend his expertise to any true Australian.",
-    rating: 4.5,
-    heroImageURL: null
-  });
+function* ReviewsList({ profile, reviews }) {
+  for (const review of reviews.values()) {
+    yield* ReviewArticle(review);  
+  }
 }
 
 function* ReviewsMap() {
@@ -300,9 +283,13 @@ function* ReviewsMap() {
   yield `</article>`;
 }
 
-function* ContactSection() {
+function* ContactSection({ profile }) {
   yield `<article data-measure=center data-p="1">`;
-  yield '<h1>Contact Peter</h1>';
+  
+  yield `<h1>`
+  yield text`Contact `;
+  yield text(profile.name);
+  yield `</h1>`;
 
   yield `<hr data-y=1>`
   
@@ -333,7 +320,7 @@ function* ContactSection() {
   yield `</article>`;
 }
 
-function ProfilePage({ profile }) {
+function ProfilePage({ profile, reviews }) {
   const themePrimary = profile.themePrimaryColor;
 
   return [
@@ -343,11 +330,11 @@ function ProfilePage({ profile }) {
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard({ profile }),
     ...ProfileSectionTabs({ profile, currentPage: 'reviews' }),
-    ...ReviewsList()
+    ...ReviewsList({ profile, reviews })
   ];
 }
 
-function ProfileMapPage({ profile }) {
+function ProfileMapPage({ profile, reviews }) {
   const themePrimary = profile.themePrimaryColor;
 
   return [
@@ -357,11 +344,11 @@ function ProfileMapPage({ profile }) {
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard({ profile }),
     ...ProfileSectionTabs({ profile, currentPage: 'map' }),
-    ...ReviewsMap()
+    ...ReviewsMap({ reviews })
   ];
 }
 
-function ProfileContactPage({ profile }) {
+function ProfileContactPage({ profile, reviews }) {
   const themePrimary = profile.themePrimaryColor;
 
   return [
@@ -371,10 +358,26 @@ function ProfileContactPage({ profile }) {
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard({ profile }),
     ...ProfileSectionTabs({ profile, currentPage: 'contact' }),
-    ...ContactSection()
+    ...ContactSection({ profile })
+  ];
+}
+
+function ProfileReviewPage({ profile, review }) {
+  const themePrimary = profile.themePrimaryColor;
+
+  return [
+    ...ProfileStyles(),
+    `<style>:root{ --theme-primary: ${themePrimary}; }</style>`,
+    `<body>`,
+    `<div class="bg-theme-primary" style="height: 10px"></div>`,
+    ...ProfileCard({ profile }),
+    ...ReviewArticle(review),
+    ...SeeOtherReviewsSection({ profile }),
+    ...ContactSection({ profile })
   ];
 }
 
 exports.ProfilePage = ProfilePage;
 exports.ProfileMapPage = ProfileMapPage;
 exports.ProfileContactPage = ProfileContactPage;
+exports.ProfileReviewPage = ProfileReviewPage;
