@@ -167,23 +167,25 @@ function* StarRating(rating) {
   yield '</div>';
 }
 
-function* ProfileCard() {
+function* ProfileCard({ profile }) {
   yield `<div style="background: linear-gradient(180deg, ${shadeOf(0)} 40.63%, ${shadeOf(0.7)} 100%);">`;
 
   yield `<div class="X" data-measure=center data-p=1>`;
   yield `<div>`;
-  yield `<img width=70 height=70 src="https://randomuser.me/api/portraits/men/29.jpg" class="rounded-full">`;
+  yield `<img width=70 height=70 src="${profile.avatarImageURL}" class="rounded-full">`;
   yield `</div>`;
 
   yield `<hr data-x=1/2>`;
 
   yield `<div class="Y">`;
   yield `<h1 data-text=0>`;
-  yield "Peter Cundall";
+  // yield "Peter Cundall";
+  yield profile.name;
   yield "</h1>";
   yield `<hr data-y=1/2>`;
   yield `<p data-text="-1 italic">`;
-  yield "Gardening is my passion, especially trees and native shrubbery. Available for hire.";
+  yield profile.bio;
+  // yield "Gardening is my passion, especially trees and native shrubbery. Available for hire.";
   yield `</div>`;
 
   yield `</div>`;
@@ -331,7 +333,7 @@ function* ContactSection() {
   yield `</article>`;
 }
 
-function ProfilePage() {
+function ProfilePage({ profile }) {
   const themePrimary = "#44A36A";
 
   return [
@@ -339,13 +341,13 @@ function ProfilePage() {
     `<style>:root{ --theme-primary: ${themePrimary}; }</style>`,
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
-    ...ProfileCard(),
+    ...ProfileCard({ profile }),
     ...ProfileSectionTabs({ currentPage: 'reviews' }),
     ...ReviewsList()
   ];
 }
 
-function ProfileMapPage() {
+function ProfileMapPage({ profile }) {
   const themePrimary = "#44A36A";
 
   return [
@@ -353,13 +355,13 @@ function ProfileMapPage() {
     `<style>:root{ --theme-primary: ${themePrimary}; }</style>`,
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
-    ...ProfileCard(),
+    ...ProfileCard({ profile }),
     ...ProfileSectionTabs({ currentPage: 'map' }),
     ...ReviewsMap()
   ];
 }
 
-function ProfileContactPage() {
+function ProfileContactPage({ profile }) {
   const themePrimary = "#44A36A";
 
   return [
@@ -367,7 +369,7 @@ function ProfileContactPage() {
     `<style>:root{ --theme-primary: ${themePrimary}; }</style>`,
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
-    ...ProfileCard(),
+    ...ProfileCard({ profile }),
     ...ProfileSectionTabs({ currentPage: 'contact' }),
     ...ContactSection()
   ];

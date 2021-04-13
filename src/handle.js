@@ -1,10 +1,10 @@
 const { htmlWriter, ProfilePage, ProfileMapPage, ProfileContactPage } = require("./view");
+const { profiles } = require("./data");
 
 /**
  * 
  * @param {import("http").ClientRequest} req 
  * @param {import("http").ServerResponse} res 
- * @returns 
  */
 function handleRequest(req, res) {
   const path = req.url;
@@ -19,12 +19,22 @@ function handleRequest(req, res) {
     return;
   }
 
-  if (path === "/api/p/1") {
-    render(ProfilePage());
-  } else if (path === "/api/p/1/map") {
-    render(ProfileMapPage());
-  } else if (path === "/api/p/1/contact") {
-    render(ProfileContactPage());
+  const [,id] = path.match(/\/p\/([\d]+)/);
+  const profile = profiles.get(id);
+
+  if (profile === undefined) {
+    render(["<h1>Not found</h1>"]);
+    return;
+  }
+
+  const dynamicPath = path.replace(/\/p\/[\d]+/, "/p/:id");
+
+  if (dynamicPath === "/api/p/:id") {
+    render(ProfilePage({ profile }));
+  } else if (dynamicPath === "/api/p/:id/map") {
+    render(ProfileMapPage({ profile }));
+  } else if (dynamicPath === "/api/p/:id/contact") {
+    render(ProfileContactPage({ profile }));
   } else {
     res.end("Hello World!" + JSON.stringify(path));
   }
