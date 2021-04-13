@@ -14,7 +14,7 @@ function handleRequest(req, res) {
     return;
   }
 
-  htmlWriter(res)(ProfileReviewPage({ profile, reviews }));
+  htmlWriter(res)(ProfileReviewPage({ profile, review }));
 }
 
 module.exports = handleRequest;
