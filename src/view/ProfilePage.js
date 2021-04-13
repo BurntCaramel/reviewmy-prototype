@@ -160,18 +160,25 @@ function* ProfileCard() {
   yield `</div>`;
 }
 
-function* ProfileSectionTabs() {
+function* ProfileSectionTabs({ currentPage }) {
   yield `<nav class="X" data-measure=center data-p=1 data-links="current-color no-underline">`;
 
-  yield `<a href="/api/p/1" data-p=1/2 style="border-top: 4px solid var(--theme-primary);">`;
+  const activeStyle = `border-top: 4px solid var(--theme-primary);`;
+  const inactiveStyle = `border-top: 4px solid transparent;`;
+
+  const reviewsStyle = currentPage === 'reviews' ? activeStyle : inactiveStyle;
+  const mapStyle = currentPage === 'map' ? activeStyle : inactiveStyle;
+  const contactStyle = currentPage === 'contact' ? activeStyle : inactiveStyle;
+
+  yield `<a href="/api/p/1" data-p=1/2 style="${reviewsStyle}">`;
   yield text`3 Reviews`;
   yield `</a>`;
 
-  yield `<a href="/api/p/1/map" data-p=1/2 style="border-top: 4px solid transparent;">`;
+  yield `<a href="/api/p/1/map" data-p=1/2 style="${mapStyle}">`;
   yield text`Map`;
   yield `</a>`;
 
-  yield `<a href="/api/p/1/contact" data-p=1/2 style="border-top: 4px solid transparent;">`;
+  yield `<a href="/api/p/1/contact" data-p=1/2 style="${contactStyle}">`;
   yield text`Contact`;
   yield `</a>`;
 
@@ -280,7 +287,7 @@ function ProfilePage() {
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard(),
-    ...ProfileSectionTabs(),
+    ...ProfileSectionTabs({ currentPage: 'reviews' }),
     ...ReviewsList()
   ];
 }
@@ -294,7 +301,7 @@ function ProfileMapPage() {
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard(),
-    ...ProfileSectionTabs(),
+    ...ProfileSectionTabs({ currentPage: 'map' }),
     ...ReviewsMap()
   ];
 }
@@ -308,7 +315,7 @@ function ProfileContactPage() {
     `<body>`,
     `<div class="bg-theme-primary" style="height: 10px"></div>`,
     ...ProfileCard(),
-    ...ProfileSectionTabs(),
+    ...ProfileSectionTabs({ currentPage: 'contact' }),
     ...ContactSection()
   ];
 }
