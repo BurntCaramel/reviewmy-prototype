@@ -140,7 +140,13 @@ function* ProfileStyles() {
   yield `<style>${style}</style>`;
 }
 
+const shadeOf = (amount) => `rgba(0,0,0,${amount * .085})`;
+// const shade = `#efefef`;
+const shade = shadeOf(.8);
+
 function* ProfileCard() {
+  yield `<div style="background: linear-gradient(180deg, ${shadeOf(0)} 40.63%, ${shadeOf(0.7)} 100%);">`;
+
   yield `<div class="X" data-measure=center data-p=1>`;
   yield `<div>`;
   yield `<img width=70 height=70 src="https://randomuser.me/api/portraits/men/29.jpg" class="rounded-full">`;
@@ -158,12 +164,17 @@ function* ProfileCard() {
   yield `</div>`;
 
   yield `</div>`;
+
+  yield `</div>`;
 }
 
 function* ProfileSectionTabs({ currentPage }) {
-  yield `<nav class="X" data-measure=center data-p=1 data-links="current-color no-underline">`;
+  // yield `<div style="background: ${shade};">`;
+  yield `<div style="background: linear-gradient(180deg, ${shadeOf(0.7)} 0%, ${shadeOf(1)} 100%);">`;
 
-  const activeStyle = `border-top: 4px solid var(--theme-primary);`;
+  yield `<nav class="X" data-measure=center data-links="current-color no-underline">`;
+
+  const activeStyle = `border-top: 4px solid var(--theme-primary); background: white;`;
   const inactiveStyle = `border-top: 4px solid transparent;`;
 
   const reviewsStyle = currentPage === 'reviews' ? activeStyle : inactiveStyle;
@@ -183,6 +194,9 @@ function* ProfileSectionTabs({ currentPage }) {
   yield `</a>`;
 
   yield `</nav>`;
+
+  yield `<div style="opacity: 0.25; border-bottom: 4px solid var(--theme-primary);"></div>`
+  yield `</div>`;
 }
 
 function* ReviewArticle({
