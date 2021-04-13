@@ -1,4 +1,4 @@
-const { htmlWriter, ProfileMapPage } = require("../../src/view");
+const { htmlWriter, ProfileMapPage } = require("../../../src/view");
 
 function handleRequest(req, res) {
   htmlWriter(res)(ProfileMapPage());
