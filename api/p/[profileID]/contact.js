@@ -1,7 +1,10 @@
 const { htmlWriter, ProfileContactPage } = require("../../../src/view");
+const { profiles } = require("../../../src/data");
 
 function handleRequest(req, res) {
-  htmlWriter(res)(ProfileContactPage());
+  const { profileID } = req.query;
+  const profile = profiles.get(profileID);
+  htmlWriter(res)(ProfileContactPage({ profile }));
 }
 
 module.exports = handleRequest;
