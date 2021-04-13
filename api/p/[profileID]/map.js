@@ -1,8 +1,7 @@
-// const { renderHTML, ProfilePage } = require("../../../src/view");
+const { htmlWriter, ProfileMapPage } = require("../../src/view");
 
 function handleRequest(req, res) {
-  res.write("<h1>Map!</h1>");
-  res.end();
+  htmlWriter(res)(ProfileMapPage());
 }
 
 module.exports = handleRequest;

@@ -1,4 +1,4 @@
-const { renderHTML, renderHTMLInto, htmlWriter, ProfilePage, ProfileMapPage, ProfileContactPage } = require("./view");
+const { htmlWriter, ProfilePage, ProfileMapPage, ProfileContactPage } = require("./view");
 
 /**
  * 
