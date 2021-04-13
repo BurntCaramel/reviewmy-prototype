@@ -6,7 +6,6 @@
   "scripts": {
     "start": "nodemon src/index.js"
   },
-  "dependencies": {},
   "devDependencies": {
     "nodemon": "1.18.4"
   },

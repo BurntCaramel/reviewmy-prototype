@@ -1,29 +1,32 @@
-const { renderHTML, ProfilePage } = require("./view");
+const { renderHTML, renderHTMLInto, htmlWriter, ProfilePage, ProfileMapPage, ProfileContactPage } = require("./view");
 
+/**
+ * 
+ * @param {import("http").ClientRequest} req 
+ * @param {import("http").ServerResponse} res 
+ * @returns 
+ */
 function handleRequest(req, res) {
   const path = req.url;
-  console.log("url", req.url, "path", req.path, "host", req.host);
+
+  const render = htmlWriter(res);
 
   if (path === "/") {
     res.writeHead(302, {
-      Location: "/p/1"
+      Location: "/api/p/1"
     });
     res.end();
     return;
   }
 
-  if (path === "/p/1") {
-    res.write(
-      renderHTML(
-        ProfilePage({
-          baseURL: "/"
-        })
-      )
-    );
-    res.end();
+  if (path === "/api/p/1") {
+    render(ProfilePage());
+  } else if (path === "/api/p/1/map") {
+    render(ProfileMapPage());
+  } else if (path === "/api/p/1/contact") {
+    render(ProfileContactPage());
   } else {
-    res.write("Hello World!" + JSON.stringify(path)); //write a response to the client
-    res.end(); //end the response
+    res.end("Hello World!" + JSON.stringify(path));
   }
 }
 
