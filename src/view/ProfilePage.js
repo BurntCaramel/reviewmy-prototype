@@ -1,6 +1,15 @@
 const { escapeToHTML: text } = require("./escape");
 
 const icons = {
+  starFilled: `<svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 15.27L16.18 19L14.54 11.97L20 7.24L12.81 6.63L10 0L7.19 6.63L0 7.24L5.46 11.97L3.82 19L10 15.27Z" fill="black"/>
+  </svg>`,
+  starEmpty: `<svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 7.24L12.81 6.62L10 0L7.19 6.63L0 7.24L5.46 11.97L3.82 19L10 15.27L16.18 19L14.55 11.97L20 7.24ZM10 13.4L6.24 15.67L7.24 11.39L3.92 8.51L8.3 8.13L10 4.1L11.71 8.14L16.09 8.52L12.77 11.4L13.77 15.68L10 13.4Z" fill="black"/>
+  </svg>`,
+  starHalfFilled: `<svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 7.24L12.81 6.62L10 0L7.19 6.63L0 7.24L5.46 11.97L3.82 19L10 15.27L16.18 19L14.55 11.97L20 7.24ZM10 13.4V4.1L11.71 8.14L16.09 8.52L12.77 11.4L13.77 15.68L10 13.4Z" fill="black"/>
+  </svg>`,
   call: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M17.0156 12.375C17.2969 12.375 17.5312 12.4688 17.7188 12.6562C17.9062 12.8438 18 13.0781 18 13.3594V16.8281C18 17.6094 17.6719 18 17.0156 18C12.3594 18 8.35938 16.3281 5.01562 12.9844C1.67188 9.64062 0 5.64062 0 0.984375C0 0.328125 0.390625 0 1.17188 0H4.64062C4.92188 0 5.15625 0.09375 5.34375 0.28125C5.53125 0.46875 5.625 0.703125 5.625 0.984375C5.625 2.20312 5.8125 3.375 6.1875 4.5C6.3125 4.90625 6.23438 5.25 5.95312 5.53125L4.03125 7.21875C5.46875 10.2188 7.76562 12.4844 10.9219 14.0156L12.4688 12.0469C12.6562 11.8594 12.8906 11.7656 13.1719 11.7656C13.3281 11.7656 13.4375 11.7812 13.5 11.8125C14.625 12.1875 15.7969 12.375 17.0156 12.375Z" fill="black"/>
   </svg>`,
@@ -144,6 +153,20 @@ const shadeOf = (amount) => `rgba(0,0,0,${amount * .085})`;
 // const shade = `#efefef`;
 const shade = shadeOf(.8);
 
+function* StarRating(rating) {
+  yield '<div class="X">';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rating) {
+      yield icons.starFilled;
+    } else if (i - 0.5 <= rating) {
+      yield icons.starHalfFilled;
+    } else {
+      yield icons.starEmpty;
+    }
+  }
+  yield '</div>';
+}
+
 function* ProfileCard() {
   yield `<div style="background: linear-gradient(180deg, ${shadeOf(0)} 40.63%, ${shadeOf(0.7)} 100%);">`;
 
@@ -195,7 +218,7 @@ function* ProfileSectionTabs({ currentPage }) {
 
   yield `</nav>`;
 
-  yield `<div style="opacity: 0.25; border-bottom: 4px solid var(--theme-primary);"></div>`
+  // yield `<div style="opacity: 0.25; border-bottom: 0.5px solid var(--theme-primary);"></div>`
   yield `</div>`;
 }
 
@@ -204,7 +227,9 @@ function* ReviewArticle({
   reviewID,
   timeDisplay,
   authorDisplay,
-  content
+  content,
+  rating,
+  heroImageURL
 }) {
   yield `<article data-measure=center data-p="1">`;
 
@@ -217,6 +242,14 @@ function* ReviewArticle({
   yield text(authorDisplay);
   yield `</div>`;
   yield `</header>`;
+
+  if (heroImageURL) {
+    // yield `<hr data-y=1/2>`;
+    yield `<img src="${heroImageURL}" style="max-width: 100%; height: auto;">`;
+  }
+
+  yield* StarRating(rating);
+
 
   yield `<p data-text=italic>`;
   yield text(content);
@@ -231,7 +264,9 @@ function* ReviewsList() {
     timeDisplay: "2 days ago",
     authorDisplay: "Jane Austin",
     content:
-      "Peter transformed my garden into something my whole family uses every day. We love lockdowns as we get to stay in our garden."
+      "Peter transformed my garden into something my whole family uses every day. We love lockdowns as we get to stay in our garden.",
+    rating: 5,
+    heroImageURL: "https://images.unsplash.com/photo-1550948390-6eb7fa773072?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fGdhcmRlbnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
   });
 
   yield* ReviewArticle({
@@ -240,7 +275,9 @@ function* ReviewsList() {
     timeDisplay: "3 weeks ago",
     authorDisplay: "Banjo Patterson",
     content:
-      "We now have birds visit our backyard all the time since Peter introduced the trees they would like. It’s changed the feeling of our entire home!"
+      "We now have birds visit our backyard all the time since Peter introduced the trees they would like. It’s changed the feeling of our entire home!",
+    rating: 4,
+    heroImageURL: "https://images.unsplash.com/photo-1615428116353-9d6a4bbf13d2?ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8YmlyZCUyMGJhdGh8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
   });
 
   yield* ReviewArticle({
@@ -249,7 +286,9 @@ function* ReviewsList() {
     timeDisplay: "7 weeks ago",
     authorDisplay: "Bob Hawke",
     content:
-      "Peter knows Australia’s flora like the back of his hand, I would recommend his expertise to any true Australian."
+      "Peter knows Australia’s flora like the back of his hand, I would recommend his expertise to any true Australian.",
+    rating: 4.5,
+    heroImageURL: null
   });
 }
 
